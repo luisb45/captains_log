@@ -21,6 +21,13 @@ mongoose.connection.once('open', () => {
     console.log('connected to mongo');
 });
 
+//Index Route
+app.get('/logs', (req, res) => {
+    Logs.find({}, (error, allLogs) => {
+        res.render('Index', {logs: allLogs});
+    });
+});
+
 
 //New Route
 app.get('/logs/new', (req, res) => {
