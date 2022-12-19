@@ -27,6 +27,22 @@ mongoose.connection.once('open', () => {
 });
 
 
+//Seed Route
+app.get('/logs/seed', (req, res) => {
+    const seededLogs = [
+        {title: 'Take off', entry: 'Ship has taken off into space.', shipIsBroken: false},
+        {title: 'Asteroid belt', entry: 'We seem to have entered an asteroid belt. Ship recieved some damage.', shipIsBroken: true},
+        {title: 'Repair', entry: 'Crewmates are continuing to repair the ship. Should be several days before we can continue our journey. ', shipIsBroken: true},
+        {title: 'New planet discovered', entry: 'Ship sensored have detected a planet that could possibly hold life. Proceeding to investigate.', shipIsBroken: false},
+    ];
+    Logs.deleteMany({}).then((data) => {
+        Logs.create(seededLogs).then((data) => {
+            res.redirect('/logs');
+        });
+    });
+});
+
+
 //Index Route
 app.get('/logs', (req, res) => {
     Logs.find({}, (error, allLogs) => {
@@ -47,6 +63,14 @@ app.post('/logs', (req, res) => {
     });
 });
 
+//Update
+app.put('/logs/:id', (req, res) => {
+    req.body.shipIsBroken = req.body.shipIsBroken === 'on' ? true : false;
+    Logs.findByIdAndUpdate(req.params.id, req.body, (err, updatedLogs) => {
+        res.redirect(`/logs/${req.params.id}`);
+    })
+})
+
 //Show Route
 app.get('/logs/:id', (req, res) => {
     Logs.findById(req.params.id, (err, foundLogs) =>{
@@ -58,6 +82,13 @@ app.get('/logs/:id', (req, res) => {
 app.delete('/logs/:id', (req, res) => {
     Logs.findByIdAndRemove(req.params.id, (err, data) => {
         res.redirect('/logs');
+    });
+});
+
+//Edit Route
+app.get('/logs/:id/edit', (req, res) => {
+    Logs.findById(req.params.id, (err, foundLogs) => {
+        res.render('Edit', {logs: foundLogs});
     });
 });
 
