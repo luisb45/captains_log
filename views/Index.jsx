@@ -6,6 +6,7 @@ export default class Index extends Component {
     return (
       <div>
         <h1>Captains log</h1>
+        <a href={'/logs/new'}>New Log</a>
         <ul>{
             logs.map((logs) => {
                 return(
@@ -13,7 +14,10 @@ export default class Index extends Component {
                         <li>
                             <a href={`/logs/${logs.id}`}>{logs.title}</a>
                             <p>{logs.entry}</p>
-                            {logs.shipIsBroken? 'Ship is fine' : 'Ship is broken'}
+                            {logs.shipIsBroken? 'Ship is broken' : 'Ship is fine'}
+                            <form action={`/logs/${logs.id}?_method=DELETE`} method="POST">
+                              <input type="submit" value="Delete"/>
+                            </form>
                         </li>
                     </div>
                 )

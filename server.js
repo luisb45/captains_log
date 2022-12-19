@@ -3,12 +3,17 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const Logs = require('./models/logs.js');
+const methodOverride = require('method-override');
+
 
 //Middleware
 app.set('view engine', 'jsx');
 app.engine('jsx', require('express-react-views').createEngine());
 
 app.use(express.urlencoded({extended:false}));
+
+app.use(methodOverride('_method'));
+
 
 //Connecting to mongoose
 mongoose.set('strictQuery', false);
@@ -46,6 +51,13 @@ app.post('/logs', (req, res) => {
 app.get('/logs/:id', (req, res) => {
     Logs.findById(req.params.id, (err, foundLogs) =>{
         res.render('Show', {logs: foundLogs});
+    });
+});
+
+//Delete Route
+app.delete('/logs/:id', (req, res) => {
+    Logs.findByIdAndRemove(req.params.id, (err, data) => {
+        res.redirect('/logs');
     });
 });
 
