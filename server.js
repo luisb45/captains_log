@@ -21,13 +21,13 @@ mongoose.connection.once('open', () => {
     console.log('connected to mongo');
 });
 
+
 //Index Route
 app.get('/logs', (req, res) => {
     Logs.find({}, (error, allLogs) => {
         res.render('Index', {logs: allLogs});
     });
 });
-
 
 //New Route
 app.get('/logs/new', (req, res) => {
@@ -42,7 +42,12 @@ app.post('/logs', (req, res) => {
     });
 });
 
-
+//Show Route
+app.get('/logs/:id', (req, res) => {
+    Logs.findById(req.params.id, (err, foundLogs) =>{
+        res.render('Show', {logs: foundLogs});
+    });
+});
 
 
 app.listen(3000, () => {
